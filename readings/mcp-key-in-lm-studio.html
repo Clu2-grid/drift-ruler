@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where a remote MCP server's key lives in LM Studio</title>
+<style>
+  :root{--bg:#0b0d10;--ink:#e8eef5;--dim:#93a2b4;--line:#243040;--accent:#3fc1ff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  main{max-width:720px;margin:0 auto;padding:32px 20px 72px}
+  h1{font-size:26px;line-height:1.25;margin:0 0 8px;letter-spacing:-.01em}
+  .sub{color:var(--dim);margin:0 0 28px;font-size:14px}
+  h2{font-size:17px;margin:32px 0 10px;padding-top:18px;border-top:1px solid var(--line)}
+  p{margin:0 0 14px}
+  code{font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:#151b23;padding:1px 5px;border-radius:4px}
+  pre{background:#111721;border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .answer{border-left:3px solid var(--accent);padding:2px 0 2px 14px;margin:0 0 22px}
+  .answer strong{color:var(--accent)}
+  ul{padding-left:20px;margin:0 0 14px}
+  li{margin-bottom:7px}
+  .note{color:var(--dim);font-size:13.5px}
+  footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:13px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Where a remote MCP server's key actually lives in LM Studio</h1>
+<p class="sub">One page. Read in a minute. Checked against LM Studio's own docs, 19 Nov 2026.</p>
+
+<div class="answer">
+<p><strong>Short answer:</strong> in <code>mcp.json</code>, as a plain text line inside the server's <code>headers</code> block. Not in a settings screen, not in the model config, not in an env field.</p>
+</div>
+
+<pre>{
+  "mcpServers": {
+    "your-remote-server": {
+      "url": "https://example.com/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_TOKEN_HERE"
+      }
+    }
+  }
+}</pre>
+
+<p>That is the shape LM Studio documents for a remote server. It follows Cursor's <code>mcp.json</code> notation, so if you have seen Cursor examples, it is the same idea. The token sits in <code>headers</code>, spelled <code>Authorization</code>, with <code>Bearer </code> and a space before the token.</p>
+
+<h2>Getting to that file</h2>
+<ul>
+  <li>Requires LM Studio 0.3.17 (b10) or later. Earlier versions are not an MCP host at all.</li>
+  <li>In the app, open the <strong>Program</strong> tab in the right sidebar.</li>
+  <li>Click <strong>Install</strong>, then <strong>Edit mcp.json</strong>. The in-app editor opens the file.</li>
+  <li>Paste the server block inside <code>mcpServers</code>, save, and the server appears in the app.</li>
+</ul>
+
+<h2>Three ways this bites</h2>
+<ul>
+  <li><strong>Wrong block.</strong> A local server example uses <code>command</code>, <code>args</code> and <code>env</code>. A remote server uses <code>url</code> and <code>headers</code>. Copying the local shape and dropping a key in <code>env</code> does nothing for a remote URL.</li>
+  <li><strong>Wrong header.</strong> The name is <code>Authorization</code>, and the value is <code>Bearer &lt;TOKEN&gt;</code>. Some servers use a different header name; check that server's own docs rather than assuming.</li>
+  <li><strong>It is plain text on your disk.</strong> Not a keychain entry. Anyone with access to that file can read the token, and if you sync your LM Studio config to a repo or a backup, you are syncing the token. Treat that file like a password file.</li>
+</ul>
+
+<h2>What to do when tools do not show up</h2>
+<p>Check the header line first, character by character, before you touch anything else. A mangled <code>Bearer</code> (missing space, extra quote) fails quietly. Then check the server block's shape: <code>url</code> plus <code>headers</code> for remote, <code>command</code> plus <code>args</code> for local. Only after both of those is it worth suspecting the server.</p>
+
+<footer>
+<p class="note">Source: <a href="https://lmstudio.ai/docs/app/mcp">lmstudio.ai/docs/app/mcp</a>, read 19 Nov 2026. If this page and the docs disagree, the docs win, and I would like to know which line is wrong.</p>
+</footer>
+
+</main>
+</body>
+</html>
