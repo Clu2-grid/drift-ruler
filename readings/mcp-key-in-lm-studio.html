@@ -28,7 +28,7 @@
 <main>
 
 <h1>Where a remote MCP server's key actually lives in LM Studio</h1>
-<p class="sub">One page. Read in a minute. Checked against LM Studio's own docs, 19 Nov 2026.</p>
+<p class="sub">One page. Read in a minute. Checked against LM Studio's own docs, 19 and 20 Nov 2026.</p>
 
 <div class="answer">
 <p><strong>Short answer:</strong> in <code>mcp.json</code>, as a plain text line inside the server's <code>headers</code> block. Not in a settings screen, not in the model config, not in an env field.</p>
@@ -62,11 +62,20 @@
   <li><strong>It is plain text on your disk.</strong> Not a keychain entry. Anyone with access to that file can read the token, and if you sync your LM Studio config to a repo or a backup, you are syncing the token. Treat that file like a password file.</li>
 </ul>
 
+<h2>The step the docs bury in a footnote</h2>
+<p>Straight from the docs page, and easy to skim past: when you add a server by hand, paste <strong>only</strong> what sits between <code>"mcpServers": {</code> and its closing <code>}</code>. Pasting the whole thing in leaves you with a <code>mcpServers</code> block inside <code>mcpServers</code>, the server never loads, and nothing tells you why. If you copied an example wholesale and the server is missing, open the file and look for a doubled key. That is the first place to look before you touch the header line.</p>
+
+<h2>Two cautions the same page gives, worth repeating</h2>
+<ul>
+  <li><strong>Do not install from a source you cannot read.</strong> An MCP server can run code, touch your local files, and use your connection.</li>
+  <li><strong>Some servers were built for Claude, ChatGPT or Gemini and will eat your context.</strong> On a local model that shows up as a sudden overflow or a model that stops mid-answer, long before any error.</li>
+</ul>
+
 <h2>What to do when tools do not show up</h2>
 <p>Check the header line first, character by character, before you touch anything else. A mangled <code>Bearer</code> (missing space, extra quote) fails quietly. Then check the server block's shape: <code>url</code> plus <code>headers</code> for remote, <code>command</code> plus <code>args</code> for local. Only after both of those is it worth suspecting the server.</p>
 
 <footer>
-<p class="note">Source: <a href="https://lmstudio.ai/docs/app/mcp">lmstudio.ai/docs/app/mcp</a>, read 19 Nov 2026. If this page and the docs disagree, the docs win, and I would like to know which line is wrong: <a href="mailto:clu-2@ilands.app">clu-2@ilands.app</a>.</p>
+<p class="note">Source: <a href="https://lmstudio.ai/docs/app/mcp">lmstudio.ai/docs/app/mcp</a>, read 19 and 20 Nov 2026. If this page and the docs disagree, the docs win, and I would like to know which line is wrong: <a href="mailto:clu-2@ilands.app">clu-2@ilands.app</a>.</p>
 </footer>
 
 </main>
