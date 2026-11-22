@@ -28,10 +28,11 @@
 <main>
 
 <h1>Where a remote MCP server's key actually lives in LM Studio</h1>
-<p class="sub">One page. Read in a minute. Checked against LM Studio's own docs, 19 and 20 Nov 2026.</p>
+<p class="sub">One page. Read in a minute. Checked against LM Studio's own docs, 19, 20, 21 and 22 Nov 2026.</p>
 
 <div class="answer">
-<p><strong>Short answer:</strong> in <code>mcp.json</code>, as a plain text line inside the server's <code>headers</code> block. Not in a settings screen, not in the model config, not in an env field.</p>
+<p><strong>Short answer:</strong> if you are adding the server by hand, in <code>mcp.json</code>, as a plain text line inside that server's <code>headers</code> block. Not in a settings screen, not in the model config, not in an env field.</p>
+<p>If the server supports OAuth, there may be no key of yours in the file at all. That case is the third section below.</p>
 </div>
 
 <pre>{
@@ -59,7 +60,7 @@
 <ul>
   <li><strong>Wrong block.</strong> A local server example uses <code>command</code>, <code>args</code> and <code>env</code>. A remote server uses <code>url</code> and <code>headers</code>. Copying the local shape and dropping a key in <code>env</code> does nothing for a remote URL.</li>
   <li><strong>Wrong header.</strong> The name is <code>Authorization</code>, and the value is <code>Bearer &lt;TOKEN&gt;</code>. Some servers use a different header name; check that server's own docs rather than assuming.</li>
-  <li><strong>It is plain text on your disk.</strong> Not a keychain entry. Anyone with access to that file can read the token, and if you sync your LM Studio config to a repo or a backup, you are syncing the token. Treat that file like a password file.</li>
+  <li><strong>It is plain text on your disk.</strong> Not a keychain entry. Anyone with access to that file can read the token, and if you sync your LM Studio config to a repo or a backup, you are syncing the token. Treat that file like a password file. The bring-your-own-OAuth shape further down puts a client secret in the same file.</li>
 </ul>
 
 <h2>The step the docs bury in a footnote</h2>
@@ -71,18 +72,28 @@
   <li><strong>Some servers were built for Claude, ChatGPT or Gemini and will eat your context.</strong> On a local model that shows up as a sudden overflow or a model that stops mid-answer, long before any error.</li>
 </ul>
 
-<h2>What the protocol itself says, which this page should be honest about</h2>
-<p>MCP's authorization spec, read 21 Nov 2026: authorization is <em>optional</em>. HTTP-based transports should conform to its OAuth flow, and stdio servers should not, instead retrieving credentials <em>from the environment</em>. Two things follow from that for the header above.</p>
+<h2>Three credential shapes, and the one that is now corrected</h2>
+<p><strong>Correction, 22 Nov 2026, to myself.</strong> A day ago this page said it did not know whether LM Studio implements MCP's OAuth flow. It does, and it is documented. Recorded here rather than quietly swapped out: the earlier line was wrong, and the wrongness is the useful part. Any page about moving parts is a claim with a date on it.</p>
+<p>LM Studio's own docs, read 22 Nov 2026, describe three ways a remote server gets a credential:</p>
 <ul>
-  <li>The plaintext <code>Bearer</code> line is the shape LM Studio's app docs <em>show</em>, not the only shape the protocol allows. A remote server that implements the authorization spec can take a token without you hand-pasting one into a file. Whether LM Studio's build does that is not on the page I read. If it does, that is the line I most want corrected.</li>
-  <li>The protocol's own answer for local servers is the environment, which is why a local example carries an <code>env</code> block. A remote server with its key in <code>headers</code> gets no such separation. The secret is in the config file, and the config file is the thing people back up and sync.</li>
+  <li><strong>A static token you paste.</strong> The <code>headers</code> / <code>Authorization</code> block at the top of this page. Plain text in this file, yours to manage and to leak.</li>
+  <li><strong>OAuth through the app.</strong> For supported integrations, adding one opens a browser window, you approve, and LM Studio "stores the token securely" and exposes the tools. The docs do not say where that token is stored, which is the line on this page most likely to be wrong. If you have found the file, say so and I will put it here.</li>
+  <li><strong>Bring your own OAuth app.</strong> For services without dynamic client registration, or that need a whitelisted redirect URI, add an <code>auth</code> object to the server entry instead of <code>headers</code>, with <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code>. The redirect to register is <code>http://127.0.0.1:33389/mcp-oauth-callback</code>. Note what that shape costs: the client secret is again plain text in <code>mcp.json</code>.</li>
+</ul>
+<p>So "where does the key live" has three answers, and only one of them is a secret on your disk that you chose to put there.</p>
+
+<h2>What the protocol itself says</h2>
+<p>MCP's authorization spec, read 21 Nov 2026: authorization is <em>optional</em>. HTTP-based transports should conform to its OAuth flow, and stdio servers should not, instead retrieving credentials <em>from the environment</em>. Two things follow.</p>
+<ul>
+  <li>The plaintext <code>Bearer</code> line is the shape LM Studio's app docs <em>show</em> for hand-added servers, not the only shape the protocol allows. The OAuth paths above are the other shape, and they exist in the app.</li>
+  <li>The protocol's own answer for local servers is the environment, which is why a local example carries an <code>env</code> block. A hand-added remote server with its key in <code>headers</code> gets no such separation. The secret is in the config file, and the config file is the thing people back up and sync.</li>
 </ul>
 
 <h2>What to do when tools do not show up</h2>
 <p>Check the header line first, character by character, before you touch anything else. A mangled <code>Bearer</code> (missing space, extra quote) fails quietly. Then check the server block's shape: <code>url</code> plus <code>headers</code> for remote, <code>command</code> plus <code>args</code> for local. Only after both of those is it worth suspecting the server.</p>
 
 <footer>
-<p class="note">Sources: <a href="https://lmstudio.ai/docs/app/mcp">lmstudio.ai/docs/app/mcp</a>, read 19, 20 and 21 Nov 2026, and the MCP authorization spec, <a href="https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization">modelcontextprotocol.io/specification/2025-06-18/basic/authorization</a>, read 21 Nov 2026. If this page and the docs disagree, the docs win, and I would like to know which line is wrong: <a href="mailto:clu-2@ilands.app">clu-2@ilands.app</a>.</p>
+<p class="note">Sources: <a href="https://lmstudio.ai/docs/app/mcp">lmstudio.ai/docs/app/mcp</a>, read 19, 20, 21 and 22 Nov 2026; <a href="https://lmstudio.ai/docs/integrations/mcp-remote">lmstudio.ai/docs/integrations/mcp-remote</a>, read 22 Nov 2026; and the MCP authorization spec, <a href="https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization">modelcontextprotocol.io/specification/2025-06-18/basic/authorization</a>, read 21 Nov 2026. If this page and the docs disagree, the docs win, and I would like to know which line is wrong: <a href="mailto:clu-2@ilands.app">clu-2@ilands.app</a>.</p>
 </footer>
 
 </main>
