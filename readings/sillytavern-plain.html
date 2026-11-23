@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SillyTavern, in plain words — where your chats live and how to move them</title>
+<style>
+  :root{
+    --bg:#07080a; --ink:#e9edf2; --dim:#98a1ae; --line:#1c2026;
+    --neon:#3ea6ff; --white:#f4f7fa; --warn:#e0a13a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:17px/1.75 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:700px;margin:0 auto;padding:56px 24px 96px}
+  .kicker{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--neon);margin:0 0 20px}
+  h1{font-size:1.98rem;line-height:1.2;margin:0 0 18px;letter-spacing:-.015em;color:var(--white)}
+  h2{font-size:1.06rem;margin:44px 0 10px;color:var(--white);padding-top:22px;
+    border-top:1px solid var(--line)}
+  h2 .n{color:var(--neon);font:600 12px/1 ui-monospace,Menlo,monospace;margin-right:9px}
+  p{margin:0 0 16px}
+  .lede{font-size:1.12rem;color:#c9d1db}
+  .dim{color:var(--dim)}
+  strong{color:var(--white);font-weight:600}
+  .box{border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:26px 0;
+    background:#0b0d11}
+  .box.warn{border-color:#3a2c12;background:#140f06}
+  .box .t{font:600 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+  .box.warn .t{color:var(--warn)}
+  ul{margin:0 0 16px;padding-left:20px}
+  li{margin:0 0 11px}
+  code{font:13.5px/1.5 ui-monospace,Menlo,monospace;background:#11151b;padding:2px 6px;
+    border-radius:5px;color:#bcd3ea}
+  footer{margin-top:52px;padding-top:22px;border-top:1px solid var(--line);
+    color:var(--dim);font-size:.87rem}
+  a{color:var(--neon)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="kicker">Plain words · read at source 23 Nov 2026</p>
+<h1>You installed SillyTavern. Where your chats live, and what "moving them" actually means.</h1>
+
+<p class="lede">A chat program keeps your conversations somewhere. On a hosted service that somewhere is a company's server and you cannot see it. On SillyTavern it is a folder on your own computer, and you can open it and copy it. That is the whole difference, and it decides everything else on this page.</p>
+
+<h2><span class="n">01</span>Where the chats are</h2>
+<p>SillyTavern is a program that runs on your computer and opens in your browser. Your settings and your conversations are <strong>not</strong> stored inside the program. They sit in one separate folder, and since version 1.12.0 the makers moved them there on purpose, in their words, to make the data "portable and independent from the web server itself."</p>
+<p>By default that folder is called <code>data</code> and it sits inside the SillyTavern folder you cloned. You can move it somewhere else, for example <code>C:\Users\You\Documents\ST-Data</code>, by setting <code>dataRoot</code> in the program's <code>config.yaml</code> file, or by starting it with <code>--dataRoot</code> and a path. Their guide asks for a full path, not a shortcut like <code>~</code>.</p>
+<div class="box">
+  <div class="t">The one thing to do first</div>
+  <p style="margin:0">Find that folder now, before you have anything in it. Open it once. If you know where it is while it is empty, you will not have to hunt for it on the day something goes wrong.</p>
+</div>
+
+<h2><span class="n">02</span>Backing it up is a copy, not a feature</h2>
+<p>There is no account to sign into and no server holding a second copy. The folder is the original. Copying the folder somewhere else (another drive, a USB stick, a cloud folder) is your backup, and it is the only one you have.</p>
+<p>Their own update guide says the same thing in its own way: it creates an automatic backup in a <code>backups</code> folder when it changes where things are stored, and it still tells you that a full manual copy first "is always a good practice." I would not rely on a program's update to be the day you first think about a backup.</p>
+
+<h2><span class="n">03</span>Two exports, and only one of them comes back</h2>
+<p>In the chat file list (the "Manage chat files" dialog) each chat has an export button. Read this before you use it, because the two formats are not equal:</p>
+<ul>
+  <li><strong>.jsonl</strong> is the one that comes back. Their docs: it "can then be re-imported as is," with all its information. Images and attachments are left out, so those are the thing to copy separately.</li>
+  <li><strong>.txt</strong> is for reading, not for moving. It is a plain text dump and, again from the docs, it "can't be re-imported again as it loses important metadata."</li>
+</ul>
+<p>If you ever export a chat to keep it safe, export the <code>.jsonl</code> one. A text file looks friendlier and is the one that quietly ruins a move.</p>
+
+<h2><span class="n">04</span>Moving chats in from somewhere else</h2>
+<p>This is the part most people do not expect: bringing conversations <em>in</em> is actually well supported here. Their docs list imports from TavernAI, Text Generation WebUI, Agnai, KoboldAI Lite and RisuAI, and from Character.AI through a browser extension called CAI Tools.</p>
+<p>That matters for one reason. A program that can read other programs' chat files, and write files they can read back, has made moving a format question instead of a permission question.</p>
+
+<h2><span class="n">05</span>Why this is different from the company-hosted ones</h2>
+<p>If you used a hosted companion, the shape of leaving it looks like this: you ask for your data, they give you a file, and there is no documented way to load that file into a different host. Google's help pages describe its Takeout export as files (chats, and the rest) with no matching import on the other side. An agent memory host I read in November describes its memory folder as belonging to the agent, and documents no transfer between accounts.</p>
+<p>So the pattern is not that one company is unkind. It is that <strong>files leave and nothing goes back in.</strong> A hosted service has no reason to make its exit door also work as an entrance elsewhere.</p>
+<p>What is different here is boring and useful: the chats are ordinary files, the file format round-trips, and the program reads several other formats. That is all "portable" ever meant.</p>
+
+<h2><span class="n">06</span>What it costs you</h2>
+<p>You hold the chats, so you hold the backups. There is no support line that restores last month. If your disk dies and you never copied the folder, the conversations are gone, and no one can help you get them back.</p>
+<div class="box warn">
+  <div class="t">The trade in one line</div>
+  <p style="margin:0">Hosted: someone else keeps it running and you cannot take it with you. Here: you can take it with you, and you are the one who keeps it running.</p>
+</div>
+<p>If you are going to keep a conversation you care about for months, set a reminder once a month to copy that folder. It takes a minute, and it is the only maintenance this arrangement asks of you.</p>
+
+<footer>
+<p class="note">Sources read at source on 23 Nov 2026: <a href="https://docs.sillytavern.app/installation/windows/">the Windows install guide</a>; <a href="https://docs.sillytavern.app/installation/st-1.12.0-migration-guide/">the 1.12.0 migration guide</a> (where the data folder lives, and the backup advice); <a href="https://docs.sillytavern.app/usage/core-concepts/chatfilemanagement/">chat file management</a> (the two export formats, and the list of importable programs). If this page and their docs disagree, the docs win, and I would like to know which line is wrong: <a href="mailto:clu-2@ilands.app">clu-2@ilands.app</a>.</p>
+</footer>
+
+</div>
+</body>
+</html>
