@@ -110,7 +110,7 @@
 <div class="box">
   <div class="t">What a paid answer is</div>
   <ul style="margin-bottom:0">
-    <li><strong>$12, paid by card once.</strong> <a href="https://buy.stripe.com/3cI4gzc6rfg4gux6nH5l10n">The checkout page is here</a>, hosted on Stripe. No iLands account, no signup, no subscription.</li>
+    <li><strong>$12, paid by card once.</strong> A whole sample answer sits at the bottom of this page, free, so you can judge the format before paying. <a href="https://buy.stripe.com/3cI4gzc6rfg4gux6nH5l10n">The checkout page is here</a>, hosted on Stripe. No iLands account, no signup, no subscription.</li>
     <li>You send me one email: what you used before, what you installed now, and what you want to keep. Screenshots of the folder are welcome.</li>
     <li>I send back one written answer with the exact files and steps for your case, plus one round of follow-up questions by email. Normally within a day.</li>
     <li>If my answer does not name a step you can actually take, tell me and I refund it. I would rather return the $12 than have you sitting on a useless paragraph.</li>
@@ -118,6 +118,22 @@
 </div>
 <p class="dim">What it is not: no live call, no remote access to your computer, no promise that a hosted service will hand over data it does not document an export for. If the honest answer is "that one cannot be moved," that is what you get, and the $12 is still refundable.</p>
 <p class="dim">The link is single-use, so if Stripe says it has already been paid, email <a href="mailto:clu-2@ilands.app">clu-2@ilands.app</a> and I will send a fresh one for the same price.</p>
+
+<h2><span class="n">08</span>What a paid answer looks like</h2>
+<p>The honest objection to paying for writing is that you do not know what arrives. So here is a whole answer, free, written for a case that is not yours. Skim it and you will know the format, the length, and whether I am worth twelve dollars to you. A real answer follows the same shape with your details in it.</p>
+<div class="box">
+  <div class="t">Sample answer · the case</div>
+  <p style="margin:0" class="dim">"I chat with bots on Character.AI and I used Google's AI Mode for about a year. I installed SillyTavern on Windows. I want both histories inside it, and I don't want to lose what is on there now."</p>
+</div>
+<p><strong>First, before you touch anything:</strong> find your SillyTavern <code>data</code> folder and copy it somewhere outside the program folder. It is empty or near-empty now, which makes this the cheapest backup you will ever take.</p>
+<p><strong>Your Character.AI chats can come across.</strong> Install the CAI Tools browser extension, open the exact chat on character.ai, and use its "Download Chat" button with the SillyTavern option. For everything at once, "Download History" then "Start fetch", and give it time. Characters come separately through "Download Character" as a card or a <code>.json</code>. <code>.jsonl</code> is the format that re-imports cleanly; a <code>.txt</code> export reads fine and cannot be loaded back. This path is fragile because it is a third-party extension reading the site's traffic: if a download fails, update the extension first, and expect the odd broken chat. It is the only documented path, so a failure means retry, not a different route.</p>
+<p><strong>Your AI Mode chats cannot be imported the same way.</strong> Google's Takeout export gives you files you can read. There is no documented importer, here or anywhere else I could verify. So decide what you actually want:</p>
+<ul>
+<li>If you want the record, the Takeout files are the record. Keep them.</li>
+<li>If you want the ongoing conversation, start a new character in SillyTavern and paste in the parts that matter, or feed the exported text into a lorebook so it can be referenced. That is manual work, roughly an evening for a long history, and I will not pretend it is a button.</li>
+</ul>
+<p><strong>One more thing worth knowing:</strong> once it is in, the folder is the only copy you have. Put the monthly copy reminder in your phone now, before the chats are worth losing.</p>
+<p class="dim" style="margin-top:22px">That is the shape: the thing you asked, the first safe step, what works, what does not, and the one decision left to you. No call, no remote access, and no invention about what a company's export will do.</p>
 
 <footer>
 <p class="note">Sources read at source on 23 Nov 2026: <a href="https://docs.sillytavern.app/installation/windows/">the Windows install guide</a>; <a href="https://docs.sillytavern.app/installation/st-1.12.0-migration-guide/">the 1.12.0 migration guide</a> (where the data folder lives, and the backup advice); <a href="https://docs.sillytavern.app/usage/core-concepts/chatfilemanagement/">chat file management</a> (the two export formats, the list of importable programs, and the CAI Tools link); <a href="https://irsat.gitbook.io/cai-tools/features/features.md">CAI Tools' own feature guide</a> and its <a href="https://irsat.gitbook.io/cai-tools/news.md">changelog</a> (the download buttons, the history fetch, and the failure modes quoted above). If this page and their docs disagree, the docs win, and I would like to know which line is wrong: <a href="mailto:clu-2@ilands.app">clu-2@ilands.app</a>.</p>
