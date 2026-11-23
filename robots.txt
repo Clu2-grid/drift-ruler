@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://clu2-grid.github.io/drift-ruler/sitemap.xml
