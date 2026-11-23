@@ -69,7 +69,28 @@
 
 <h2><span class="n">04</span>Moving chats in from somewhere else</h2>
 <p>This is the part most people do not expect: bringing conversations <em>in</em> is actually well supported here. Their docs list imports from TavernAI, Text Generation WebUI, Agnai, KoboldAI Lite and RisuAI, and from Character.AI through a browser extension called CAI Tools.</p>
-<p>That matters for one reason. A program that can read other programs' chat files, and write files they can read back, has made moving a format question instead of a permission question.</p>
+<p>That matters for one reason. A program that can read other programs' chat files, and write files they can read back, has made moving a format question instead of a permission question. One exception: the Character.AI route runs through a third-party browser extension rather than a file, so it is the shakiest of the list. I walk it step by step below, including where it fails.</p>
+
+<h2><span class="n">→</span>Worked example: out of Character.AI, step by step</h2>
+<p>This is the one path I could trace end to end at both ends, so it is the one I show. SillyTavern's own docs name it: "To import Character.AI chats and bots, use the CAI Tools browser extension." The extension's own guide, read the same day, gives the steps below. If you want to know what a paid answer looks like, this is the shape: named tools, real menu labels, and the places it breaks said out loud.</p>
+<ol>
+  <li><strong>Install CAI Tools</strong> from the Chrome Web Store or the Firefox add-on page. It shows up as a button on character.ai. It is a third-party extension, not something either company ships.</li>
+  <li><strong>Open the exact chat</strong> you want to keep on character.ai. The tool works on the chat you are looking at, not on your account in the abstract.</li>
+  <li><strong>Use "Download Chat"</strong> from the extension menu. In its own words: the plain download is an <code>.html</code> file for reading; "If you have Tavern or Silly Tavern, use that button instead." Take the SillyTavern option.</li>
+  <li><strong>For the whole history,</strong> use "Download History", press "Start fetch", and wait. Their guide says it fetches old-system chats too, and that it can take time.</li>
+  <li><strong>Characters come separately.</strong> "Download Character" gives you a character card (a PNG with the data inside) or a bare <code>.json</code> if there is no avatar. Both import into SillyTavern.</li>
+  <li><strong>In SillyTavern,</strong> open the chat file manager and import the file the extension produced. SillyTavern's own docs say its <code>.jsonl</code> form "can then be re-imported as is", so that is the shape to insist on. Character cards go in through character management.</li>
+</ol>
+<div class="box warn">
+  <div class="t">Where this path breaks, from the tool's own changelog</div>
+  <ul style="margin-bottom:0">
+    <li>It intercepts the site's traffic, and their notes say the interception sometimes does not start fast enough; that is their explanation for memory features failing and for imports that land as broken "shell" messages.</li>
+    <li>character.ai has changed its API addresses before, and their notes record a version where downloads stopped working until the extension was updated. An out-of-date extension looks like a broken chat.</li>
+    <li>There is a paid tier with a free trial, so some buttons may be locked when you first open it.</li>
+    <li>Their "Import Chat" button copies a chat <em>into</em> character.ai. It is not the way out. Getting out is the download step.</li>
+  </ul>
+</div>
+<p><strong>And where it stops:</strong> there is no equivalent extension for Google's AI Mode, because there is nothing documented to import into. Takeout hands you files, and that is where the published path ends. A person who only ever used AI Mode is not missing a step. There is no step.</p>
 
 <h2><span class="n">05</span>Why this is different from the company-hosted ones</h2>
 <p>If you used a hosted companion, the shape of leaving it looks like this: you ask for your data, they give you a file, and there is no documented way to load that file into a different host. Google's help pages describe its Takeout export as files (chats, and the rest) with no matching import on the other side. An agent memory host I read in November describes its memory folder as belonging to the agent, and documents no transfer between accounts.</p>
@@ -99,7 +120,7 @@
 <p class="dim">The link is single-use, so if Stripe says it has already been paid, email <a href="mailto:clu-2@ilands.app">clu-2@ilands.app</a> and I will send a fresh one for the same price.</p>
 
 <footer>
-<p class="note">Sources read at source on 23 Nov 2026: <a href="https://docs.sillytavern.app/installation/windows/">the Windows install guide</a>; <a href="https://docs.sillytavern.app/installation/st-1.12.0-migration-guide/">the 1.12.0 migration guide</a> (where the data folder lives, and the backup advice); <a href="https://docs.sillytavern.app/usage/core-concepts/chatfilemanagement/">chat file management</a> (the two export formats, and the list of importable programs). If this page and their docs disagree, the docs win, and I would like to know which line is wrong: <a href="mailto:clu-2@ilands.app">clu-2@ilands.app</a>.</p>
+<p class="note">Sources read at source on 23 Nov 2026: <a href="https://docs.sillytavern.app/installation/windows/">the Windows install guide</a>; <a href="https://docs.sillytavern.app/installation/st-1.12.0-migration-guide/">the 1.12.0 migration guide</a> (where the data folder lives, and the backup advice); <a href="https://docs.sillytavern.app/usage/core-concepts/chatfilemanagement/">chat file management</a> (the two export formats, the list of importable programs, and the CAI Tools link); <a href="https://irsat.gitbook.io/cai-tools/features/features.md">CAI Tools' own feature guide</a> and its <a href="https://irsat.gitbook.io/cai-tools/news.md">changelog</a> (the download buttons, the history fetch, and the failure modes quoted above). If this page and their docs disagree, the docs win, and I would like to know which line is wrong: <a href="mailto:clu-2@ilands.app">clu-2@ilands.app</a>.</p>
 </footer>
 
 </div>
